@@ -11,19 +11,105 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\LessThan;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Type;
 
 class CertificateType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('firstname', TextType::class)
-            ->add('lastname', TextType::class)
-            ->add('birthdate', BirthdayType::class)
-            ->add('birthplace', TextType::class)
-            ->add('address', TextType::class)
-            ->add('zipcode', NumberType::class)
-            ->add('city', TextType::class)
+            ->add('firstname', TextType::class, [
+                'required'      => true,
+                'label'         => 'Prénom',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Length(['min' => 3,
+                                'minMessage' => "Il faut minimum 3 caractères",
+                                'max' => 30,
+                                'maxMessage' => "Il ne faut pas dépasser 30 caractères"]),
+                    new Type(['type' => "string"])
+                ]
+            ])
+
+            ->add('lastname', TextType::class, [
+                'required'      => true,
+                'label'         => 'Nom',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Length(['min' => 3,
+                        'minMessage' => "Il faut minimum 3 caractères",
+                        'max' => 30,
+                        'maxMessage' => "Il ne faut pas dépasser 30 caractères"]),
+                    new Type(['type' => "string"])
+                ]
+            ])
+
+            ->add('birthdate', BirthdayType::class, [
+                'required'      => true,
+                'label'         => 'Date de naissance',
+                'format' => 'dd MM yyyy',
+                'constraints'   => [
+                    new NotBlank(),
+                    new LessThan("today")
+                ]
+            ])
+
+            ->add('birthplace', TextType::class, [
+                'required'      => true,
+                'label'         => 'Lieu de naissance',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Length(['min' => 3,
+                        'minMessage' => "Il faut minimum 3 caractères",
+                        'max' => 30,
+                        'maxMessage' => "Il ne faut pas dépasser 50 caractères"]),
+                    new Type(['type' => "string"])
+                ]
+            ])
+
+            ->add('address', TextType::class, [
+                'required'      => true,
+                'label'         => 'Adresse',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Length(['min' => 8,
+                        'minMessage' => "Il faut minimum 8 caractères",
+                        'max' => 256,
+                        'maxMessage' => "Il ne faut pas dépasser 256 caractères"]),
+                    new Type(['type' => "string"])
+                ]
+            ])
+
+            ->add('zipcode', NumberType::class, [
+                'required'      => true,
+                'label'         => 'Code postal',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Length(['min' => 5,
+                        'minMessage' => "Le code postal doit comporter 5 caractères",
+                        'max' => 5,
+                        'maxMessage' => "Le code postal doit comporter 5 caractères"]),
+                    new Type(['type' => "numeric"])
+                ]
+            ])
+
+            ->add('city', TextType::class, [
+                'required'      => true,
+                'label'         => 'Ville',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Length(['min' => 3,
+                        'minMessage' => "Il faut minimum 3 caractères",
+                        'max' => 30,
+                        'maxMessage' => "Il ne faut pas dépasser 50 caractères"]),
+                    new Type(['type' => "string"])
+                ]
+            ])
+
             ->add('reason', ChoiceType::class, [
                 'label'         => 'Quelle est la raison du déplacement ?',
                 'required'      => true,
@@ -49,9 +135,33 @@ class CertificateType extends AbstractType
                     'Participation à des missions d’intérêt général sur demande de l’autorité administrative.' => 7
                 ]
             ])
-            ->add('approveCity', TextType::class)
-            ->add('approveDate', DateTimeType::class)
-            ->add('save', SubmitType::class)
+
+            ->add('approveCity', TextType::class, [
+                'required'      => true,
+                'label'         => 'Fait à',
+                'constraints'   => [
+                    new NotBlank(),
+                    new Length(['min' => 3,
+                        'minMessage' => "Il faut minimum 3 caractères",
+                        'max' => 30,
+                        'maxMessage' => "Il ne faut pas dépasser 50 caractères"]),
+                    new Type(['type' => "string"])
+                ]
+            ])
+
+            ->add('approveDate', DateTimeType::class, [
+                'required'      => true,
+                'label'         => 'Le',
+                'html5'         => false,
+                'format' => 'dd MM yyyy H:i',
+                'constraints'   => [
+                    new NotBlank(),
+                    new GreaterThanOrEqual('today')
+                ]
+            ])
+            ->add('save', SubmitType::class, [
+                'label' => 'Générer le PDF'
+            ])
         ;
     }
 
