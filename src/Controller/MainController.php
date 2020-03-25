@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Form\CertificateType;
+use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 
 class MainController extends AbstractController
 {
@@ -39,7 +41,7 @@ class MainController extends AbstractController
      * @param Session $session
      * @return Response
      */
-    public function generatePdf(Session $session)
+    public function generatePdf(Session $session, Pdf $snapy)
     {
         if (empty($session->get('contactInfo')))
         {
@@ -49,8 +51,19 @@ class MainController extends AbstractController
         $data = $session->get('contactInfo');
 
         return $this->render('main/generate.html.twig', [
+            'data'=>$data
+        ]);
+
+        /*
+        $html =  $this->renderView('main/generate.html.twig', [
             'data'=> $data
         ]);
+
+        return new PdfResponse(
+            $snapy->getOutputFromHtml($html),
+            'attestion_deplacement.pdf'
+        );
+        */
 
     }
 }
