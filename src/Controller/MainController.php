@@ -50,11 +50,6 @@ class MainController extends AbstractController
 
         $data = $session->get('contactInfo');
 
-        return $this->render('main/generate.html.twig', [
-            'data'=>$data
-        ]);
-
-        /*
         $html =  $this->renderView('main/generate.html.twig', [
             'data'=> $data
         ]);
@@ -63,7 +58,7 @@ class MainController extends AbstractController
             $snapy->getOutputFromHtml($html),
             'attestion_deplacement.pdf'
         );
-        */
+
 
     }
 }

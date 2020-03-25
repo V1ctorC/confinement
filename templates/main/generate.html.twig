@@ -4,63 +4,114 @@
 
 {% block body %}
     <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; border: 2px solid; text-align: center}
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif;text-align: center}
         .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+        .test{ width: 20%; display: inline-block}
+        .test2{ width: 10%; display: inline-block}
+        .formLine{ margin-bottom: 8px}
     </style>
 
     <div class="example-wrapper">
-        <h1>Attestion de déplacement dérogatoire</h1>
+        <h1 style="margin: 64px auto">Attestion de déplacement dérogatoire</h1>
 
         <p>
             En application de l’article 3 du décret du 23 mars 2020 prescrivant les mesures générales <br />
             nécessaires pour faire face à l’épidémie de Covid19 dans le cadre de l’état d’urgence sanitaire
         </p>
 
-        <div>
-            <span>Je soussigné(e),</span> <br />
+        <div style="padding: 24px; text-align: initial">
 
-            <div style="text-align: initial">
-                <span>Mme/M. :</span>
-                <span>{{ data['lastname'] }} {{ data['firstname'] }}</span>
+            <div>Je soussigné(e),</div>
+
+            <br />
+
+            <div>
+            <div class="formLine">
+                <span class="test">Mme/M. :</span>
+                <span><b>{{ data['lastname'] }} {{ data['firstname'] }}</b></span>
             </div>
-            <div style="text-align: initial">
-                <span>Né(e)le :</span>
-                <span>{{ data['birthdate']|date("d/m/Y") }}</span>
+            <div class="formLine">
+                <span class="test">Né(e)le :</span>
+                <span><b>{{ data['birthdate']|date("d/m/Y") }}</b></span>
             </div>
-            <div style="text-align: initial">
-                <span>À :</span>
-                <span>{{ data['birthplace'] }}</span>
+            <div class="formLine">
+                <span class="test">À :</span>
+                <span><b>{{ data['birthplace'] }}</b></span>
             </div>
-            <div style="text-align: initial">
-                <span>Demeurant :</span>
-                <div>
-                    {{ data['address'] }} <br />
-                    {{ data['zipcode'] }}, {{ data['city'] }}
+            <div class="formLine">
+                <span class="test" style="vertical-align: top">Demeurant :</span>
+                <div style="display: inline-block">
+                    <b>
+                        {{ data['address'] }} <br />
+                        {{ data['zipcode'] }}, {{ data['city'] }}
+                    </b>
                 </div>
+            </div>
             </div>
         </div>
 
-        <p>
+        <p style="margin-bottom: 32px">
             Certifie que mon déplacement est lié au motif suivant autorisé par l’article 3 du
             décret du 23 mars 2020 prescrivant les mesures générales nécessaires pour faire face à
             l’épidémie de Covid19 dans le cadre de l’état d’urgence sanitaire :
         </p>
 
+        <p style="margin: 24px 0">
+            {% if data['reason'] == "1" %}
 
-        <p>
-            Vous allez pouvoir télécharger votre PDF très prochainement
+                Déplacements entre le domicile et le lieu d’exercice de l’activité professionnelle, lorsqu’ils sont
+                indispensables à l’exercice d’activités ne pouvant être organisées sous forme de télétravail ou
+                déplacements professionnels ne pouvant être différés.
+
+            {% elseif data['reason'] == "2" %}
+
+                Déplacements pour effectuer des achats de fournitures nécessaires à l’activité professionnelle et
+                des achats de première nécessité dans des établissements dont les activités demeurent autorisées
+                (liste sur gouvernement.fr)
+
+            {% elseif data['reason'] == "3" %}
+
+                Consultations et soins ne pouvant être assurés à distance et ne pouvant être différés ;
+                consultations et soins des patients atteints d'une affection de longue durée.
+
+            {% elseif data['reason'] == "4" %}
+
+                Déplacements pour motif familial impérieux, pour l’assistance aux personnes vulnérables ou la
+                garde d’enfants.
+
+            {% elseif data['reason'] == "5" %}
+
+                Déplacements brefs, dans la limite d'une heure quotidienne et dans un rayon maximal d'un kilomètre
+                autour du domicile, liés soit à l'activité physique individuelle des personnes, à l'exclusion de
+                toute pratique sportive collective et de toute proximité avec d'autres personnes, soit à la
+                promenade avec les seules personnes regroupées dans un même domicile, soit aux besoins des
+                animaux de compagnie.
+
+            {% elseif data['reason'] == "6" %}
+
+                Convocation judiciaire ou administrative.
+
+            {% elseif data['reason'] == "7" %}
+
+                Participation à des missions d’intérêt général sur demande de l’autorité administrative.
+
+            {% endif %}
         </p>
 
-        {{ dump(data) }}
+        <div style="text-align: initial; padding: 24px">
+            <div class="formLine">
+                <span class="test2">Fait à :</span>
+                <span>{{ data['approveCity'] }}</span>
+            </div>
+            <div class="formLine">
+                <span class="test2">Le :</span>
+                <span>{{ data['approveDate']|date("d/m/Y") }} à {{ data['approveDate']|date("H") }}h{{ data['approveDate']|date("i") }}</span>
+            </div>
+        </div>
 
-        {{ data['firstname'] }}
-        {{ data['lastname'] }}
-        {{ data['birthdate']|date("d/m/Y") }}
-        {{ data['address'] }}
-        {{ data['zipcode'] }}
-        {{ data['city'] }}
-
-        {{ data['approveCity'] }}
-
+        <div>
+            <span>Signature :</span>
+            <div style="border: 1px solid; width: 360px; height: 180px; margin: 16px; border-radius: 6px; margin: 16px auto 24px auto"></div>
+        </div>
     </div>
 {% endblock %}
